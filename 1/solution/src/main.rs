@@ -1,4 +1,4 @@
-use std::fs;
+use std::{collections::HashMap, fs};
 
 const FILENAME: &str = "../input.txt";
 
@@ -7,25 +7,31 @@ fn read_input() -> String {
     contents
 }
 
+fn countmap(data: Vec<i32>) -> HashMap<i32, i32> {
+    let mut map = HashMap::new();
+    for num in data {
+        *map.entry(num).or_default() += 1;
+    }
+    map
+}
+
 fn main() {
     let input = read_input();
     let (left, right): (Vec<_>, Vec<_>) = input
         .split_whitespace()
-        .map(|num| num.parse::<i64>().expect("Failed to parse i64"))
+        .map(|num| num.parse::<i32>().expect("Failed to parse i32"))
         .enumerate()
         .partition(|(index, _)| index % 2 == 0);
 
-    let mut left: Vec<_> = left.into_iter().map(|(_, num)| num).collect();
-    let mut right: Vec<_> = right.into_iter().map(|(_, num)| num).collect();
+    let left: Vec<_> = left.into_iter().map(|(_, num)| num).collect();
+    let right: Vec<_> = right.into_iter().map(|(_, num)| num).collect();
 
-    left.sort();
-    right.sort();
+    let right_countmap = countmap(right);
 
-    let result: i64 = left
-        .iter()
-        .zip(right.iter())
-        .map(|(left, right)| i64::abs(left - right))
+    let similarity: i32 = left
+        .into_iter()
+        .map(|num| num * right_countmap.get(&num).unwrap_or(&0))
         .sum();
 
-    println!("{}", result);
+    println!("{}", similarity);
 }
