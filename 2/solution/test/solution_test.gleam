@@ -1,5 +1,6 @@
 import gleeunit
 import gleeunit/should
+import solution
 
 pub fn main() {
   gleeunit.main()
@@ -7,6 +8,6 @@ pub fn main() {
 
 // gleeunit test functions end in `_test`
 pub fn part1_test() {
-  1
-  |> should.equal(1)
+  solution.part_one()
+  |> should.equal(2)
 }
