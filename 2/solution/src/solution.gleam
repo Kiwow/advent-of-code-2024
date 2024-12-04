@@ -62,6 +62,6 @@ pub fn main() {
   let part_one = part_one(reports)
   let part_two = part_two(reports)
 
-  io.println("Day 1: " |> string.append(int.to_string(part_one)))
-  io.println("Day 2: " |> string.append(int.to_string(part_two)))
+  io.println("Part 1: " |> string.append(int.to_string(part_one)))
+  io.println("Part 2: " |> string.append(int.to_string(part_two)))
 }
