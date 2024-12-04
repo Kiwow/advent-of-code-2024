@@ -54,21 +54,19 @@ fn parse_tokens(input: String) -> List(Token) {
   }
 }
 
-type MaybeMultiplyAccumulator {
-  Accumulator(sum: Int, keep_multiplying: Bool)
+type MaybeMultiply {
+  Continue(sum: Int)
+  Stop(sum: Int)
 }
 
-fn maybe_multiply(
-  acc: MaybeMultiplyAccumulator,
-  token: Token,
-) -> MaybeMultiplyAccumulator {
+fn maybe_multiply(acc: MaybeMultiply, token: Token) -> MaybeMultiply {
   case token {
-    Do -> Accumulator(acc.sum, True)
-    Dont -> Accumulator(acc.sum, False)
+    Do -> Continue(acc.sum)
+    Dont -> Stop(acc.sum)
     Multiply(a, b) ->
-      case acc.keep_multiplying {
-        True -> Accumulator(acc.sum + a * b, acc.keep_multiplying)
-        False -> acc
+      case acc {
+        Continue(sum) -> Continue(sum + a * b)
+        Stop(_) -> acc
       }
   }
 }
@@ -76,7 +74,7 @@ fn maybe_multiply(
 pub fn part_two(input: String) -> Int {
   input
   |> parse_tokens
-  |> list.fold(Accumulator(sum: 0, keep_multiplying: True), maybe_multiply)
+  |> list.fold(Continue(sum: 0), maybe_multiply)
   |> fn(acc) { acc.sum }
 }
 
