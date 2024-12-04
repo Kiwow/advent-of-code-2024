@@ -6,8 +6,16 @@ pub fn main() {
   gleeunit.main()
 }
 
-// gleeunit test functions end in `_test`
+const filename = "../sample.txt"
+
 pub fn part1_test() {
-  solution.part_one()
+  let reports = solution.get_reports(filename)
+  solution.part_one(reports)
   |> should.equal(2)
+}
+
+pub fn part2_test() {
+  let reports = solution.get_reports(filename)
+  solution.part_two(reports)
+  |> should.equal(4 + 9)
 }

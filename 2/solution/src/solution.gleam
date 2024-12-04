@@ -4,9 +4,7 @@ import gleam/list
 import gleam/string
 import simplifile
 
-const filename = "../input.txt"
-
-fn read_input() -> String {
+fn read_input(filename) -> String {
   let assert Ok(contents) = simplifile.read(from: filename)
   string.trim(contents)
 }
@@ -22,6 +20,12 @@ fn parse_report(report: String) -> List(Int) {
 fn parse_reports(input: String) -> List(List(Int)) {
   string.split(input, on: "\n")
   |> list.map(parse_report)
+}
+
+pub fn get_reports(filename) {
+  let input = read_input(filename)
+  let reports = parse_reports(input)
+  reports
 }
 
 fn is_within_threshold(pair, get_diff) {
@@ -42,14 +46,22 @@ fn is_safe(report: List(Int)) -> Bool {
   is_ascending || is_descending
 }
 
-pub fn part_one() -> Int {
-  let input = read_input()
-  let reports = parse_reports(input)
+pub fn part_one(reports) -> Int {
   list.count(reports, is_safe)
 }
 
+pub fn part_two(reports) -> Int {
+  list.count(reports, fn(report) {
+    list.combinations(report, list.length(report) - 1)
+    |> list.any(fn(report) { is_safe(report) })
+  })
+}
+
 pub fn main() {
-  let part_one = part_one()
+  let reports = get_reports("../input.txt")
+  let part_one = part_one(reports)
+  let part_two = part_two(reports)
 
   io.println("Day 1: " |> string.append(int.to_string(part_one)))
+  io.println("Day 2: " |> string.append(int.to_string(part_two)))
 }
